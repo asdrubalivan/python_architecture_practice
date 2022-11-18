@@ -77,4 +77,13 @@ def test_can_only_deallocate_allocated_lines(data: OrderTestData) -> None:
     batch, unallocated_line = data
     quantity = batch.available_quantity
     batch.deallocate(unallocated_line)
-    assert batch.available_quantity == quantity # Idempotent
+    assert batch.available_quantity == quantity # IdempotentA
+
+@given(_make_batch(condition=lambda batch_qty, order_qty: batch_qty >= order_qty))
+def test_allocation_is_idempotent(data: OrderTestData) -> None:
+    batch, line = data
+    final_quantity = batch.available_quantity - line.qty
+    batch.allocate(line)
+    batch.allocate(line)
+
+    assert batch.available_quantity == final_quantity
