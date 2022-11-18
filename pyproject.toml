@@ -11,6 +11,8 @@ hypothesis = "^6.57.1"
 Flask = "^2.2.2"
 
 [tool.poetry.dev-dependencies]
+mypy = "^0.991"
+pytest-mypy = "^0.10.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
