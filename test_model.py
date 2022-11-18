@@ -71,3 +71,10 @@ def test_cannot_allocate_if_skus_do_not_match(data: OrderTestData, new_sku: str)
     assume(batch.sku != new_sku)
     line = OrderLine(old_line.orderid, new_sku, old_line.qty)
     assert batch.can_allocate(line) is False
+
+@given(_make_batch(condition=lambda batch_qty, order_qty: batch_qty >= order_qty))
+def test_can_only_deallocate_allocated_lines(data: OrderTestData) -> None:
+    batch, unallocated_line = data
+    quantity = batch.available_quantity
+    batch.deallocate(unallocated_line)
+    assert batch.available_quantity == quantity # Idempotent
